@@ -16,3 +16,4 @@ pytest
 tqdm
 openai
 langchain-huggingface
+ragas
