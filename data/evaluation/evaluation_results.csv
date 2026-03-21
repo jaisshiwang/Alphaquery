@@ -1,0 +1,30 @@
+id,question,expected_document,expected_pages,predicted_answer,citations,latency_seconds,retrieved_chunk_count,document_hit,page_hit,token_overlap_score,answer_pass
+q1,What is Fidelity's base case for 2024?,Fidelity International Outlook 2024,[5],"Fidelity's base case for 2024 is a cyclical recession [Source 2, p. 5]. This is driven by factors such as the buffer of savings built up by households and the corporate sector being almost drained, fiscal support narrowing, and a pick-up in refinancing needs at a time of credit tightening across the board [Source 2, p. 5].","['[Fidelity International Outlook 2024, p. 5]', '[Fidelity International Outlook 2024, p. 2]']",5.268,4,True,True,0.889,True
+q2,What does Vanguard say about interest rates in 2024?,Vanguard Outlook 2024,"[1, 2]","According to Vanguard, interest rates in 2024 are expected to be higher and more stable than in the past decade. They believe that a return to sound money, characterized by positive real interest rates, will provide a solid foundation for long-term risk-adjusted returns [Source 2, p. 1]. 
+
+Higher interest rates are expected to endure beyond the next business cycle and will usher in a return to sound money, with implications for the global economy and financial markets [Source 3, p. 3]. Vanguard also notes that even after policy rates recede from their cyclical peaks, rates will settle at a higher level than in the past [Source 3, p. 3].
+
+In fact, Vanguard believes that a higher interest rate environment will serve long-term investors well, but the transition may be bumpy [Source 3, p. 3]. They also provide a forecast for cumulative returns over the subsequent 10 years, which suggests that investing in a bond portfolio similar to the Bloomberg U.S. Aggregate Bond Index may lead to steep declines in the short term, but will eventually break even in early 2030, assuming interest rates remain low [Source 4, p. 17].","['[Vanguard Outlook 2024, p. 1]', '[Vanguard Outlook 2024, p. 3]', '[Vanguard Outlook 2024, p. 17]']",0.984,4,True,True,0.667,True
+q3,What is BlackRock's view on the macro regime in 2024?,BlackRock 2024 Global Outlook,"[1, 2]","Based on the retrieved context, BlackRock's view on the macro regime in 2024 is that it is characterized by higher rates and greater volatility, marking a significant change from the decade following the global financial crisis [Source 1, p. 11]. This new regime is attributed to ever-expanding production capacity allowing central banks to stabilize economies through loose monetary policy [Source 1, p. 11].
+
+In this new regime, one-and-done strategies are no longer effective, and a more dynamic investing approach is required to outperform a buy-and-hold strategy [Source 2, p. 6]. Additionally, the market's attention to any particular risk, including geopolitics, has increased, according to BlackRock's Geopolitical Risk Indicator [Source 3, p. 10].
+
+Overall, BlackRock views the macro regime in 2024 as a challenging and dynamic environment that requires a more active and adaptable investment approach [Source 1, p. 11].","['[BlackRock 2024 Global Outlook, p. 2]', '[BlackRock 2024 Global Outlook, p. 6]', '[BlackRock 2024 Global Outlook, p. 10]', '[BlackRock 2024 Global Outlook, p. 1]']",0.511,4,True,True,0.591,True
+q4,What is PIMCO's view on bonds in the 2024 outlook?,PIMCO_Cyclical_Outlook_Wilding_Balls_Jan2024,"[1, 2]","Based on the retrieved context, PIMCO's view on bonds in the 2024 outlook is that they offer attractive yields and resilience across multiple possible outcomes [Source 4, p. 1]. This is because bonds can provide a potential price appreciation in an economic slowdown, as occurred in late 2023 [Source 2, p. 8]. Additionally, intermediate bond maturities can help investors pursue attractive yield along with potential price appreciation [Source 2, p. 8].","['[PIMCO_Cyclical_Outlook_Wilding_Balls_Jan2024, p. 8]', '[PIMCO_Cyclical_Outlook_Wilding_Balls_Jan2024, p. 1]']",0.345,4,True,True,0.667,True
+q5,Which outlook discusses cyclical recession as a scenario?,Fidelity International Outlook 2024,"[2, 5]","A cyclical recession is discussed as a scenario in the following documents:
+
+- [Source 2, p. 9] Our base case scenario is a cyclical recession, which would see a moderate economic contraction followed by a return to growth in late 2024 or early 2025.
+- [Source 2, p. 9] In this scenario, inflation would be sticky for a period before returning to target, with interest rates staying higher for longer followed by central banks pivoting to cut rates.
+- [Source 4, p. 12] A cyclical recession would be the 'Goldilocks-zone' for property investment because a small amount of inflation is positive for real estate.
+- [Source 2, p. 9] In the cyclical recession scenario, growth would come later in the year, with the following forecast:
+  - Q4 2023: 0% growth
+  - Q1 2024: 1% growth
+  - Q2 2024: 2% growth
+  - Q3 2024: 3% growth
+  - Q4 2024: 4% growth
+- [Source 2, p. 9] In the cyclical recession scenario, the inflation rate would be:
+  - Q4 2023: 0%
+  - Q1 2024: 1%
+  - Q2 2024: 2%
+  - Q3 2024: 3%
+  - Q4 2024: 4%","['[Fidelity International Outlook 2024, p. 9]', '[Fidelity International Outlook 2024, p. 12]']",0.677,4,True,False,0.562,True

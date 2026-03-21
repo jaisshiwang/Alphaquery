@@ -1,0 +1,50 @@
+[
+  {
+    "id": "q1",
+    "question": "What is Fidelity's base case for 2024?",
+    "expected_answer": "Fidelity's base case for 2024 is a cyclical recession.",
+    "expected_document": "Fidelity International Outlook 2024",
+    "expected_pages": [5],
+    "filters": {
+      "publisher": "Fidelity"
+    }
+  },
+  {
+    "id": "q2",
+    "question": "What does Vanguard say about interest rates in 2024?",
+    "expected_answer": "Vanguard expects interest rates to remain structurally higher than in the pre-pandemic era and frames 2024 as a return to sound money.",
+    "expected_document": "Vanguard Outlook 2024",
+    "expected_pages": [1, 2],
+    "filters": {
+      "publisher": "Vanguard"
+    }
+  },
+  {
+    "id": "q3",
+    "question": "What is BlackRock's view on the macro regime in 2024?",
+    "expected_answer": "BlackRock describes a new macro regime marked by higher interest rates, tighter financial conditions, and the need for a more active investment approach.",
+    "expected_document": "BlackRock 2024 Global Outlook",
+    "expected_pages": [1, 2],
+    "filters": {
+      "publisher": "BlackRock"
+    }
+  },
+  {
+    "id": "q4",
+    "question": "What is PIMCO's view on bonds in the 2024 outlook?",
+    "expected_answer": "PIMCO argues that bonds offer attractive yields and resilience across a range of economic outcomes.",
+    "expected_document": "PIMCO_Cyclical_Outlook_Wilding_Balls_Jan2024",
+    "expected_pages": [1, 2],
+    "filters": {
+      "publisher": "PIMCO"
+    }
+  },
+  {
+    "id": "q5",
+    "question": "Which outlook discusses cyclical recession as a scenario?",
+    "expected_answer": "Fidelity International Outlook 2024 discusses cyclical recession as a scenario and as its base case for 2024.",
+    "expected_document": "Fidelity International Outlook 2024",
+    "expected_pages": [2, 5],
+    "filters": {}
+  }
+]

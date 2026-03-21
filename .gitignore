@@ -1,0 +1,52 @@
+# Data
+*.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.python-version
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Environment files
+#.env #Giving access to .env file for submission, but consider if you want to ignore it in practice due to sensitive info
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# ML / app artifacts
+mlruns/
+logs/
+
+# Vector DB / local data artifacts
+data/bronze/*.json
+data/silver/*.json
+data/gold/chroma/
+chroma/
+*.sqlite3
+*.db
+
+# Optional: ignore copied PDFs if you do not want them in git
+# data/documents/*.pdf

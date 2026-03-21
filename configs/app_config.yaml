@@ -1,0 +1,45 @@
+project:
+  name: alphaquery
+  version: 0.1.0
+  description: "RAG-powered financial document assistant"
+
+paths:
+  documents_dir: data/documents
+  bronze_dir: data/bronze
+  silver_dir: data/silver
+  gold_dir: data/gold
+  evaluation_dir: data/evaluation
+  chroma_dir: data/gold/chroma
+
+llm:
+  provider: openai_compatible
+  model_name: llama-3.1-8b-instant
+  base_url: https://api.groq.com/openai/v1
+  api_key_env: GROQ_API_KEY
+  temperature: 0.0
+  max_tokens: 700
+
+embeddings:
+  provider: sentence_transformers
+  model_name: sentence-transformers/all-MiniLM-L6-v2
+
+retrieval:
+  top_k: 4
+  search_type: similarity
+
+chunking:
+  chunk_size: 900
+  chunk_overlap: 150
+  separators:
+    - "\n\n"
+    - "\n"
+    - ". "
+    - " "
+
+mlflow:
+  enabled: true
+  experiment_name: alphaquery-rag
+
+app:
+  show_retrieved_chunks: true
+  enable_metadata_filters: true
