@@ -1,5 +1,5 @@
 # Data
-*.pdf
+#*.pdf Upload demo PDFs for submission
 
 # Python
 __pycache__/
