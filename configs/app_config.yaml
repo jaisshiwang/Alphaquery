@@ -36,6 +36,9 @@ chunking:
     - ". "
     - " "
 
+evaluation:
+  enable_ragas: true
+  
 mlflow:
   enabled: true
   experiment_name: alphaquery-rag
