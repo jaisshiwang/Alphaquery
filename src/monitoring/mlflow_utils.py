@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import mlflow
@@ -11,7 +12,11 @@ from src.utils.config import load_config
 
 
 def setup_mlflow() -> bool:
-    """Initialize MLflow experiment if enabled."""
+    """Initialize MLflow experiment if enabled.
+
+    Returns:
+        True if MLflow is enabled, else False.
+    """
     config = load_config()
     mlflow_config = config.get("mlflow", {})
 
@@ -65,7 +70,10 @@ def log_query_run(
         mlflow.log_param("model_name", llm_metadata.get("model_name"))
 
         mlflow.log_metric("latency_seconds", result.get("latency_seconds", 0.0))
-        mlflow.log_metric("retrieved_chunk_count", retrieval_meta["retrieved_chunk_count"])
+        mlflow.log_metric(
+            "retrieved_chunk_count",
+            retrieval_meta["retrieved_chunk_count"],
+        )
 
         mlflow.log_text(result.get("answer", ""), "artifacts/answer.txt")
         mlflow.log_text(
@@ -82,19 +90,54 @@ def log_query_run(
         )
 
 
-def log_evaluation_summary(summary: Dict[str, Any], results: List[Dict[str, Any]]) -> None:
-    """Log evaluation summary and detailed results to MLflow."""
+def log_evaluation_summary(
+    summary: Dict[str, Any],
+    results: List[Dict[str, Any]],
+    evaluation_csv_path: Optional[Path] = None,
+    ragas_summary: Optional[Dict[str, float]] = None,
+    ragas_json_path: Optional[Path] = None,
+) -> None:
+    """Log evaluation summary and artifacts to MLflow.
+
+    Args:
+        summary: Aggregated baseline evaluation summary.
+        results: Per-question evaluation results.
+        evaluation_csv_path: Optional CSV artifact path for per-question results.
+        ragas_summary: Optional aggregated RAGAS summary.
+        ragas_json_path: Optional JSON artifact path for saved RAGAS results.
+    """
     if not setup_mlflow():
         return
 
     with mlflow.start_run(run_name="evaluation_summary", nested=True):
+        # Baseline summary
         for key, value in summary.items():
             if isinstance(value, (int, float)):
                 mlflow.log_metric(key, value)
             else:
                 mlflow.log_param(key, str(value))
 
+        # Per-question detailed results
         mlflow.log_text(
             json.dumps(results, indent=2, ensure_ascii=False),
             "artifacts/evaluation_results.json",
         )
+
+        if evaluation_csv_path and evaluation_csv_path.exists():
+            mlflow.log_artifact(str(evaluation_csv_path), artifact_path="artifacts")
+
+        # RAGAS summary metrics
+        if ragas_summary:
+            for key, value in ragas_summary.items():
+                if isinstance(value, (int, float)):
+                    mlflow.log_metric(f"ragas_{key}", float(value))
+                else:
+                    mlflow.log_param(f"ragas_{key}", str(value))
+
+            mlflow.log_text(
+                json.dumps(ragas_summary, indent=2, ensure_ascii=False),
+                "artifacts/ragas_summary.json",
+            )
+
+        if ragas_json_path and ragas_json_path.exists():
+            mlflow.log_artifact(str(ragas_json_path), artifact_path="artifacts")

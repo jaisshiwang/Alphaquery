@@ -35,4 +35,7 @@ eval:
 mlflow-ui:
 	$(VENV)/bin/mlflow ui --backend-store-uri mlruns
 
+ragas-eval:
+	$(PYTHON_VENV) -m src.evaluation.ragas_evaluator
+
 bootstrap: setup init ingest silver gold

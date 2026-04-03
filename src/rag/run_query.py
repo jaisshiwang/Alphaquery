@@ -29,6 +29,11 @@ def main() -> None:
         print(f"\n--- Chunk {i} ---")
         print(doc.metadata)
         print(doc.page_content[:400])
+        
+    print("\n Complete result object:")
+    for key, value in result.items():
+        if key != "retrieved_docs":  # Avoid printing full retrieved docs again
+            print(f"{key}: {value}")
 
 
 if __name__ == "__main__":

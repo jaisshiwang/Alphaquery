@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Tuple
 
 import pandas as pd
 
@@ -14,8 +14,9 @@ from src.evaluation.metrics import (
     page_hit,
     token_overlap_score,
 )
-from src.rag.chain import answer_question
+from src.evaluation.ragas_evaluator import run_ragas_evaluation, save_ragas_results
 from src.monitoring.mlflow_utils import log_evaluation_summary
+from src.rag.chain import answer_question
 from src.utils.config import load_config
 
 
@@ -47,9 +48,11 @@ def evaluate_example(example: Dict[str, Any]) -> Dict[str, Any]:
     return {
         "id": example["id"],
         "question": example["question"],
+        "expected_answer": example["expected_answer"],
         "expected_document": example["expected_document"],
         "expected_pages": example["expected_pages"],
         "predicted_answer": predicted_answer,
+        "retrieved_contexts": [doc.page_content for doc in retrieved_docs],
         "citations": result["citations"],
         "latency_seconds": result["latency_seconds"],
         "retrieved_chunk_count": len(retrieved_docs),
@@ -61,7 +64,7 @@ def evaluate_example(example: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def summarize_results(results: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """Summarize evaluation results."""
+    """Summarize baseline evaluation results."""
     total = len(results)
 
     return {
@@ -78,40 +81,104 @@ def summarize_results(results: List[Dict[str, Any]]) -> Dict[str, Any]:
     }
 
 
+def merge_ragas_per_question(
+    df: pd.DataFrame,
+    ragas_df: Any,
+) -> Tuple[pd.DataFrame, List[str]]:
+    """Merge per-question RAGAS metrics into the baseline dataframe."""
+    if not isinstance(ragas_df, pd.DataFrame):
+        try:
+            ragas_df = pd.DataFrame(ragas_df)
+        except Exception as exc:
+            raise TypeError(
+                f"ragas_df must be a pandas DataFrame-like object, got {type(ragas_df)}"
+            ) from exc
+
+    non_metric_cols = {"question", "answer", "contexts", "ground_truth"}
+    ragas_metric_cols = [col for col in ragas_df.columns if col not in non_metric_cols]
+
+    if not ragas_metric_cols:
+        return df, []
+
+    ragas_metrics_df = ragas_df[ragas_metric_cols].reset_index(drop=True)
+    merged_df = pd.concat([df.reset_index(drop=True), ragas_metrics_df], axis=1)
+
+    return merged_df, ragas_metric_cols
+
+
 def main() -> None:
     """Run evaluation on the configured gold set."""
     config = load_config()
-    gold_set_path = Path(config["paths"]["evaluation_dir"]) / "gold_set.json"
+    evaluation_dir = Path(config["paths"]["evaluation_dir"])
+    gold_set_path = evaluation_dir / "gold_set.json"
 
     gold_set = load_gold_set(str(gold_set_path))
     results = [evaluate_example(example) for example in gold_set]
     summary = summarize_results(results)
 
-    log_evaluation_summary(summary, results)
-    
+    ragas_enabled = config.get("evaluation", {}).get("enable_ragas", False)
+    ragas_summary: Optional[Dict[str, float]] = None
+    ragas_output_path: Optional[Path] = None
+    ragas_metric_cols: List[str] = []
+
     df = pd.DataFrame(results)
+
+    if ragas_enabled:
+        try:
+            ragas_summary, ragas_df = run_ragas_evaluation(results)
+            df, ragas_metric_cols = merge_ragas_per_question(df, ragas_df)
+
+            ragas_output_path = evaluation_dir / "ragas_results.json"
+            save_ragas_results(ragas_summary, ragas_output_path)
+
+            ragas_per_question_path = evaluation_dir / "ragas_per_question.csv"
+            ragas_df.to_csv(ragas_per_question_path, index=False)
+            print(f"Saved per-question RAGAS results to: {ragas_per_question_path}")
+        except Exception as exc:
+            print("\n=== RAGAS Evaluation Skipped ===")
+            print(f"Reason: {exc}")
+            ragas_summary = None
+
+    output_path = evaluation_dir / "evaluation_results.csv"
+    df.to_csv(output_path, index=False)
+
+    log_evaluation_summary(
+        summary=summary,
+        results=results,
+        evaluation_csv_path=output_path,
+        ragas_summary=ragas_summary,
+        ragas_json_path=ragas_output_path,
+    )
 
     print("\n=== Evaluation Summary ===")
     for key, value in summary.items():
         print(f"{key}: {value}")
 
-    print("\n=== Per-Question Results ===")
-    print(
-        df[
-            [
-                "id",
-                "document_hit",
-                "page_hit",
-                "token_overlap_score",
-                "answer_pass",
-                "latency_seconds",
-            ]
-        ].to_string(index=False)
-    )
+    if ragas_summary:
+        print("\n=== RAGAS Summary ===")
+        for key, value in ragas_summary.items():
+            print(f"{key}: {round(value, 4)}")
 
-    output_path = Path(config["paths"]["evaluation_dir"]) / "evaluation_results.csv"
-    df.to_csv(output_path, index=False)
+    print("\n=== Per-Question Results ===")
+    display_cols = [
+        "id",
+        "document_hit",
+        "page_hit",
+        "token_overlap_score",
+        "answer_pass",
+        "latency_seconds",
+    ]
+
+    for col in ["faithfulness", "answer_relevancy", "context_precision", "context_recall"]:
+        if col in df.columns:
+            display_cols.append(col)
+
+    print(df[display_cols].to_string(index=False))
+
     print(f"\nSaved detailed results to: {output_path}")
+
+    if ragas_output_path:
+        print(f"Saved RAGAS summary to: {ragas_output_path}")
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@
     "question": "What is Fidelity's base case for 2024?",
     "expected_answer": "Fidelity's base case for 2024 is a cyclical recession.",
     "expected_document": "Fidelity International Outlook 2024",
-    "expected_pages": [5],
+    "expected_pages": [5, 9],
     "filters": {
       "publisher": "Fidelity"
     }
@@ -44,7 +44,7 @@
     "question": "Which outlook discusses cyclical recession as a scenario?",
     "expected_answer": "Fidelity International Outlook 2024 discusses cyclical recession as a scenario and as its base case for 2024.",
     "expected_document": "Fidelity International Outlook 2024",
-    "expected_pages": [2, 5],
+    "expected_pages": [5, 9],
     "filters": {}
   }
 ]

@@ -32,4 +32,5 @@ LLM Generator
    ↓
 Evaluation + Monitoring
 - gold set evaluation
+- ragas evaluation
 - MLflow logging
